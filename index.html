@@ -3,55 +3,82 @@
 
 <head>
     <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <link href="https://fonts.googleapis.com/css?family=IBM+Plex+Sans:400,400i,700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.min.css">
-    <link rel="stylesheet" href="./assets/css/style.css" />
-    <title>5 Day Weather Dashboard</title>
+    <link rel="stylesheet" href="./assets/css/style.css">
+
+    <title>Weather Dashboard</title>
 </head>
 
-<body class="flex-column min-100-vh">
-    <header class="hero">
-        <h1 class="app-title"></i>Weather Dashboard</h1>
-        <p>Search for Weather Conditions in a 5 day forecast</p>
+<body>
+    <header>
+        <h1>5 Day Weather Forecast</h1>
     </header>
 
-    <!-- I used a class activiy for a template -->
+        <p id="inputContainer" class="input">Enter City: <input type="text" id="cityInput"></p>
+        <button id="submitButton" type="button" class="btn" onclick="GetInfo()">Get Weather Info</button>
+        <br>   
 
-    <main class="flex-row justify-space-between">
-        <div class="col-12 col-md-4">
-
-            <div class="card">
-                <h3 class="card-header text-uppercase">Search By City</h3>
-                <form id="city-form" class="card-body">
-                    <label class="form-label" for="cityname">City Name</label>
-                    <input name="cityname" id="cityname" type="text" autofocus="true" class="form-input" />
-                    <button type="submit" class="btn">Get Weather Info</button>
-                </form>
-            </div>
-
-            <div class="card">
-                <h3 class="card-header text-uppercase">Search By Topic</h3>
-                <div id="city-buttons" class="card-body">
-                    <button data-city = "Toronto" class="btn">Toronto</button>
-                    <button data-city = "Windsor" class="btn">Windsor</button>
-                    <button data-city = "New York" class="btn">New York</button>
-                    <button data-city = "London" class="btn">London</button>
-                    <button data-city = "Istanbul" class="btn">Istanbul</button>
-                    <button data-city = "Tokyo" class="btn">Tokyo</button>
+    <div id="weatherContainer" style="display: none;">
+        <div class="card">
+            <h2 id="cityName"></h2>
+            <p class="weather" id="day1"></p>
+                <div class="image"><img src="./assets/images/temperature-half-solid.svg" class="imgClass" id="img1">
                 </div>
+                <p class="minValues" id="day1Min"></p>
+                <p class="maxValues" id="day1Max"></p>
+                <p class="description" id="day1Desc"></p>
+            
+        </div>
+        <div id="iconsContainer">
+            
+            <div class="icons">
+                <p class="weather" id="day2"></p>
+                <div class="image"><img src="./assets/images/temperature-half-solid.svg" class="imgClass" id="img2">
+                </div>
+                <p class="minValues" id="day2Min"></p>
+                <p class="maxValues" id="day2Max"></p>
+                <p class="description" id="day2Desc"></p>
+            </div>
+            <div class="icons">
+                <p class="weather" id="day3"></p>
+                <div class="image"><img src="./assets/images/temperature-half-solid.svg" class="imgClass" id="img3">
+                </div>
+                <p class="minValues" id="day3Min"></p>
+                <p class="maxValues" id="day3Max"></p>
+                <p class="description" id="day3Desc"></p>
+            </div>
+            <div class="icons">
+                <p class="weather" id="day4"></p>
+                <div class="image"><img src="./assets/images/temperature-half-solid.svg" class="imgClass" id="img4">
+                </div>
+                <p class="minValues" id="day4Min"></p>
+                <p class="maxValues" id="day4Max"></p>
+                <p class="description" id="day4Desc"></p>
+            </div>
+            <div class="icons">
+                <p class="weather" id="day5"></p>
+                <div class="image"><img src="./assets/images/temperature-half-solid.svg" class="imgClass" id="img5">
+                </div>
+                <p class="minValues" id="day5Min"></p>
+                <p class="maxValues" id="day5Max"></p>
+                <p class="description" id="day5Desc"></p>
+            </div>
+            <div class="icons">
+                <p class="weather" id="day6"></p>
+                <div class="image"><img src="./assets/images/temperature-half-solid.svg" class="imgClass" id="img6">
+                </div>
+                <p class="minValues" id="day6Min"></p>
+                <p class="maxValues" id="day6Max"></p>
+                <p class="description" id="day6Desc"></p>
             </div>
         </div>
+    </div>
 
-        <div class="col-12 col-md-8">
-            <h2 class="subtitle">Showing Weather Information for: <span id="city-search-term"></span></h2>
-            <br>
-            <div id="weather-container" class="list-group"></div>
-        </div>
-    </main>
 
     <script src="./assets/js/script.js"></script>
+
+
 </body>
 
 </html>

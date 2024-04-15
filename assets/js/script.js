@@ -1,109 +1,74 @@
-const cityFormEl = document.querySelector('#city-form');
-const cityButtonsEl = document.querySelector('#city-buttons');
-const cityInputEl = document.querySelector('#cityname');
-const cityContainerEl = document.querySelector('#weather-container');
-const citySearchTerm = document.querySelector('#city-search-term');
+function GetInfo() {
+  var newName = document.getElementById("cityInput").value;
+  var cityName = document.getElementById("cityName");
+  cityName.innerHTML = "Today in " + newName;
 
-const formSubmitHandler = function (event) {
-  event.preventDefault();
+  fetch('https://api.openweathermap.org/data/2.5/forecast?q=' + newName + '&appid=b2e4f3de9c07742c01746aa2ea930dca')
+    .then(response => response.json())
+    .then(data => {
+      // Store data in local storage
+      localStorage.setItem('weatherData', JSON.stringify(data));
 
-  const cityname = cityInputEl.value.trim();
-
-  if (cityname) {
-    getUserCity(cityname);
-
-    cityContainerEl.textContent = '';
-    cityInputEl.value = '';
-  } else {
-    alert('Please enter a location.');
-  }
-};
-
-const buttonClickHandler = function (event) {
-  const city = event.target.getAttribute('data-city');
-
-  if (city) {
-    getUserCity(city);
-
-    cityContainerEl.textContent = '';
-  }
-};
-
-const getUserCity = function (user) {
-  const apiUrl = `https://api.openweathermap.org/data/2.5/forecast?q=${user}&appid=b2e4f3de9c07742c01746aa2ea930dca`;
-
-  fetch(apiUrl)
-    .then(function (response) {
-      if (response.ok) {
-        response.json().then(function (data) {
-          displayCity(data, user);
-        });
-      } else {
-        alert(`Error:${response.statusText}`);
+      //Getting the min and max values for each day
+      for (i = 0; i < 6; i++) {
+        document.getElementById("day" + (i + 1) + "Min").innerHTML = "Min: " + Number((data.list[i].main.temp_min - 273.15) * 9 / 5 + 32).toFixed(1) + "°F";
+        document.getElementById("day" + (i + 1) + "Max").innerHTML = "Max: " + Number((data.list[i].main.temp_max - 273.15) * 9 / 5 + 32).toFixed(1) + "°F";
+        document.getElementById("day" + (i + 1) + "Desc").innerHTML = data.list[i].weather[0].description;
       }
+/*
+       // Create a button element
+       let button = document.createElement("button");
+       button.classList.add("historyBtn");
+       button.textContent = cityName;
+       button.setAttribute("data-day", i + 1);
+
+       // Add click event listener to the button
+       button.addEventListener("click", function() {
+         // Perform an action when the button is clicked
+         var day = this.getAttribute("data-day");
+         console.log(cityName);
+       });
+
+       // Append the button to the "history" div
+       document.getElementById("history").appendChild(button);
+      */
+
+      //Getting Weather Icons
+      for (i = 0; i < 6; i++) {
+        document.getElementById("img" + (i + 1)).src = "http://openweathermap.org/img/wn/" +
+          data.list[i].weather[0].icon +
+          ".png";
+      }
+
+      console.log(data)
+
     })
-    .catch(function (error) {
-      alert('Unable to collect weather data');
-    });
-};
+    .catch(err => alert("Failed To Load"))
 
-const getFeaturedCity = function (city) {
-  const apiUrl = `https://openweathermap.org/find?q=${city}`;
+  document.getElementById("weatherContainer").style.display = "block";
+}
 
-  fetch(apiUrl).then(function (response) {
-    if (response.ok) {
-      response.json().then(function (data) {
-        displayRepos(data.items, city);
-      });
-    } else {
-      alert(`Error:${response.statusText}`);
-    }
-  });
-};
-    
-const displayCity = function(city, searchTerm) {
-    
-    cityContainerEl.innerHTML = '';
-  
-    citySearchTerm.textContent = searchTerm;
-  
-    // Check if city data is available
-    if (city.list.length === 0) {
-      cityContainerEl.textContent = 'No weather data found for this city.';
-      return;
-    }
-  
-    for (let i = 0; i < 5; i++) {
-      const dayData = city.list[i * 8]; // I searched for this formula
-  
-      // Calculate the date for the current day
-      const date = new Date();
-      date.setDate(date.getDate() + i); // Needed to fix a recurring error
-      
-      // Convert temperature from Kelvin to Fahrenheit because open weather map's default is  in K
-      const temperatureFahrenheit = (dayData.main.temp - 273.15) * 9/5 + 32;
-  
-      // Create elements for each day's weather data
-      const dayEl = document.createElement('div');
-      dayEl.classList.add('weather-day');
-  
-      const dateEl = document.createElement('h3');
-      dateEl.textContent = date.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
-  
-      const temperatureEl = document.createElement('p');
-      temperatureEl.textContent = `Temperature: ${temperatureFahrenheit.toFixed(1)}°F`; 
-  
-      const descriptionEl = document.createElement('p');
-      descriptionEl.textContent = `Description: ${dayData.weather[0].description}`;
-  
-      dayEl.appendChild(dateEl);
-      dayEl.appendChild(temperatureEl);
-      dayEl.appendChild(descriptionEl);
-  
-      cityContainerEl.appendChild(dayEl);
-    }
-  };
-  
+//Info for the next five days of the week
+var d = new Date();
+var weekday = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday",];
 
-cityFormEl.addEventListener('submit', formSubmitHandler);
-cityButtonsEl.addEventListener('click', buttonClickHandler);
+// Get the right day
+function CheckDay(day){
+  if(day + d.getDay() > 6){
+      return day + d.getDay() - 7;
+  }
+  else{
+      return day + d.getDay();
+  }
+}
+
+for(i = 0; i<6; i++){
+    document.getElementById("day" + (i+1)).innerHTML = weekday[CheckDay(i)];
+}
+
+document.getElementById("cityInput").addEventListener("keydown", function(event) {
+  if (event.key === "Enter") { // Check if the pressed key is 'Enter'
+    event.preventDefault(); // Prevent the default action of 'Enter', which is submitting the form
+    document.getElementById("submitButton").click(); // Trigger the click event of the button with id 'submitButton'
+  }
+});
